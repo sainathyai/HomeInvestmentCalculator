@@ -5,7 +5,7 @@ A comprehensive financial calculator that helps you make an informed decision be
 ## Features
 
 ### Comprehensive Cost Analysis
-- **Buyer Costs**: Mortgage P&I, property taxes, insurance, HOA, maintenance, PMI, utilities
+- **Buyer Costs**: Mortgage P&I, property taxes, insurance, HOA, maintenance, PMI
 - **Renter Costs**: Monthly rent, renters insurance
 - **Tax Benefits**: Mortgage interest deduction, property tax deduction (SALT cap applied)
 - **Investment Growth**: Models how saved money grows in the market
@@ -14,7 +14,7 @@ A comprehensive financial calculator that helps you make an informed decision be
 ✅ PMI calculations (automatically drops at 20% equity)
 ✅ Tax deductions with 2024 tax brackets (configurable filing status)
 ✅ Property tax growth over time
-✅ Utility cost differences (homes vs apartments)
+✅ Optional utility cost differences (if buying larger property)
 ✅ Home appreciation and rent inflation
 ✅ Closing costs and selling costs
 ✅ Investment returns on saved capital

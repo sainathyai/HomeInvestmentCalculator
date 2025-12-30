@@ -35,7 +35,7 @@ property_tax_growth = st.sidebar.slider("Property Tax Growth Rate (% annually)",
 home_insurance_yr = st.sidebar.number_input("Home Insurance ($/year)", min_value=0, max_value=10000, value=3000, step=100)
 hoa_monthly = st.sidebar.number_input("HOA Fee ($/month)", min_value=0, max_value=1000, value=100, step=10)
 maint_percent = st.sidebar.slider("Maintenance (% of home value/year)", min_value=0.0, max_value=3.0, value=1.0, step=0.1) / 100
-utilities_premium = st.sidebar.number_input("Extra Utilities vs Apartment ($/month)", min_value=0, max_value=500, value=50, step=10, help="Homes often have higher utility costs")
+utilities_premium = st.sidebar.number_input("Extra Utilities vs Renting ($/month)", min_value=0, max_value=500, value=0, step=10, help="Set to 0 if comparing same property. Increase if buying a larger home.")
 
 # Rental Inputs
 st.sidebar.subheader("🏢 Rental Costs")
@@ -607,7 +607,7 @@ with st.expander("ℹ️ See Calculation Assumptions & Notes"):
     - HOA fees
     - Maintenance (% of home value)
     - PMI (if down payment < 20%, until 20% equity reached)
-    - Extra utilities vs apartment
+    - Optional extra utilities (if buying larger property; defaults to $0 for same property)
     - **Tax benefits** from mortgage interest & property tax deductions (SALT cap applied)
     - Closing costs to buy
     - Selling costs when liquidating
