@@ -274,6 +274,61 @@ with col4:
     else:
         st.metric("Advantage", "Renting", f"${abs(difference):,.0f}", delta_color="inverse")
 
+# Net Worth Calculation Explanation
+st.subheader("💡 Understanding Net Worth Calculations")
+
+col_explain1, col_explain2 = st.columns(2)
+
+with col_explain1:
+    st.markdown("""
+    **🏠 Buyer's Net Worth Components:**
+
+    **Assets:**
+    - Current home value (with appreciation)
+
+    **Liabilities:**
+    - Remaining mortgage balance
+    - Selling costs ({:.1f}% of home value)
+
+    **Formula:**
+    ```
+    Net Worth = Home Value
+                - Remaining Loan Balance
+                - Selling Costs
+    ```
+
+    **What's Included:**
+    - ✅ Home equity buildup (principal payments)
+    - ✅ Property appreciation over time
+    - ✅ Tax benefits (reduce monthly costs)
+    - ❌ Not included: Down payment & closing costs (already spent)
+    """.format(selling_costs * 100))
+
+with col_explain2:
+    st.markdown("""
+    **💼 Renter's Net Worth Components:**
+
+    **Investment Portfolio:**
+    - Down payment saved (${:,.0f})
+    - Closing costs saved (${:,.0f})
+    - Monthly cost differences invested
+    - Compound growth at {:.1f}% annually
+
+    **Formula:**
+    ```
+    Net Worth = Investment Portfolio Balance
+    ```
+
+    **How It Grows:**
+    1. Starts with down payment + closing costs
+    2. Each month: Portfolio grows at investment rate
+    3. Monthly difference added/subtracted:
+       - If renting is cheaper → money invested
+       - If renting is more expensive → money withdrawn
+    """.format(down_payment_amt, home_price * closing_costs_buy, invest_return * 100))
+
+st.markdown("---")
+
 # Find Breakeven
 crossover_idx = np.argwhere(np.diff(np.sign(np.array(net_worth_buy) - np.array(net_worth_rent)))).flatten()
 if len(crossover_idx) > 0:
@@ -698,10 +753,8 @@ with col_export2:
 st.markdown("---")
 st.subheader("🔍 Calculation Verification")
 
-with st.expander("Verify Monthly Calculations (Sample: Month 1 & Year 1)"):
-    st.markdown("""
-    ### Month 1 Breakdown:
-    """)
+with st.expander("📊 View Net Worth Calculation Breakdown (Month 1)"):
+    st.markdown("### 🧮 Detailed Net Worth Calculation - Month 1")
 
     # Recalculate Month 1 for verification
     month1_tax = (home_price * property_tax_rate) / 12
@@ -711,40 +764,86 @@ with st.expander("Verify Monthly Calculations (Sample: Month 1 & Year 1)"):
     month1_principal = mortgage_payment - month1_interest
     month1_pmi = (loan_amount * pmi_rate) / 12 if down_payment_percent < 0.20 and pmi_rate > 0 else 0
 
-    col_v1, col_v2 = st.columns(2)
+    # Month 1 values
+    month1_home_value = home_price * (1 + home_appreciation / 12)
+    month1_remaining_loan = loan_amount - month1_principal
+    month1_equity = month1_home_value - month1_remaining_loan
+    month1_selling_costs = month1_home_value * selling_costs
+    month1_buyer_networth = month1_home_value - month1_remaining_loan - month1_selling_costs
 
-    with col_v1:
+    month1_buyer_total = mortgage_payment + month1_tax + month1_ins + hoa_monthly + month1_maint + month1_pmi + utilities_premium
+    month1_renter_total = monthly_rent + renters_insurance_yr/12
+    month1_difference = month1_buyer_total - month1_renter_total
+
+    month1_renter_portfolio_start = down_payment_amt + (home_price * closing_costs_buy)
+    month1_renter_portfolio_growth = month1_renter_portfolio_start * (invest_return / 12)
+    month1_renter_networth = month1_renter_portfolio_start * (1 + invest_return / 12) + month1_difference
+
+    col_nw1, col_nw2 = st.columns(2)
+
+    with col_nw1:
+        st.markdown("#### 🏠 BUYER Net Worth Calculation")
         st.markdown(f"""
-        **Buyer (Month 1):**
-        - Principal & Interest: ${mortgage_payment:,.2f}
-          - Principal portion: ${month1_principal:,.2f}
-          - Interest portion: ${month1_interest:,.2f}
-        - Property Tax: ${month1_tax:,.2f}
-        - Insurance: ${month1_ins:,.2f}
-        - HOA: ${hoa_monthly:,.2f}
-        - Maintenance: ${month1_maint:,.2f}
-        - PMI: ${month1_pmi:,.2f}
-        - Utilities: ${utilities_premium:,.2f}
-        - **Total (before tax benefit): ${mortgage_payment + month1_tax + month1_ins + hoa_monthly + month1_maint + month1_pmi + utilities_premium:,.2f}**
+        **Step 1: Home Value After Month 1**
+        - Purchase price: ${home_price:,.2f}
+        - Appreciation (1 month @ {home_appreciation*100:.2f}%/year): ${month1_home_value - home_price:,.2f}
+        - **Home value**: ${month1_home_value:,.2f}
+
+        **Step 2: Remaining Mortgage**
+        - Original loan: ${loan_amount:,.2f}
+        - Principal paid (Month 1): ${month1_principal:,.2f}
+        - Interest paid (Month 1): ${month1_interest:,.2f}
+        - **Remaining balance**: ${month1_remaining_loan:,.2f}
+
+        **Step 3: Calculate Equity**
+        - Home value: ${month1_home_value:,.2f}
+        - Minus remaining loan: -${month1_remaining_loan:,.2f}
+        - **Gross equity**: ${month1_equity:,.2f}
+
+        **Step 4: Subtract Selling Costs**
+        - Selling costs ({selling_costs*100:.1f}%): -${month1_selling_costs:,.2f}
+
+        ---
+        **🎯 BUYER NET WORTH (Month 1): ${month1_buyer_networth:,.2f}**
         """)
 
-    with col_v2:
+    with col_nw2:
+        st.markdown("#### 💼 RENTER Net Worth Calculation")
         st.markdown(f"""
-        **Renter (Month 1):**
-        - Rent: ${monthly_rent:,.2f}
-        - Insurance: ${renters_insurance_yr/12:,.2f}
-        - **Total: ${monthly_rent + renters_insurance_yr/12:,.2f}**
+        **Step 1: Starting Investment Portfolio**
+        - Down payment saved: ${down_payment_amt:,.2f}
+        - Closing costs saved: ${home_price * closing_costs_buy:,.2f}
+        - **Initial portfolio**: ${month1_renter_portfolio_start:,.2f}
 
-        **Difference (Month 1):**
-        - Buyer costs more by: ${(mortgage_payment + month1_tax + month1_ins + hoa_monthly + month1_maint + month1_pmi + utilities_premium) - (monthly_rent + renters_insurance_yr/12):,.2f}
+        **Step 2: Investment Growth (1 Month)**
+        - Return rate: {invest_return*100:.2f}%/year = {invest_return/12*100:.3f}%/month
+        - Investment gain: ${month1_renter_portfolio_growth:,.2f}
+        - **Portfolio after growth**: ${month1_renter_portfolio_start * (1 + invest_return / 12):,.2f}
+
+        **Step 3: Monthly Cost Difference**
+        - Buyer total cost: ${month1_buyer_total:,.2f}
+        - Renter total cost: ${month1_renter_total:,.2f}
+        - Difference: ${month1_difference:,.2f}
+        - {"(Buyer costs MORE → money withdrawn)" if month1_difference > 0 else "(Renter costs MORE → money withdrawn)"}
+
+        **Step 4: Add/Subtract Difference**
+        - Portfolio: ${month1_renter_portfolio_start * (1 + invest_return / 12):,.2f}
+        - {"Plus" if month1_difference > 0 else "Minus"} difference: {"+" if month1_difference > 0 else ""}{month1_difference:,.2f}
+
+        ---
+        **🎯 RENTER NET WORTH (Month 1): ${month1_renter_networth:,.2f}**
         """)
 
+    st.markdown("---")
     st.markdown(f"""
-    ### Renter's Portfolio Growth (Month 1):
-    - Starting amount: ${down_payment_amt + (home_price * closing_costs_buy):,.2f}
-      - Down payment saved: ${down_payment_amt:,.2f}
-      - Closing costs saved: ${home_price * closing_costs_buy:,.2f}
-    - Investment return (one month): ${(down_payment_amt + (home_price * closing_costs_buy)) * (invest_return / 12):,.2f}
-    - Monthly cost difference added: ${(mortgage_payment + month1_tax + month1_ins + hoa_monthly + month1_maint + month1_pmi + utilities_premium) - (monthly_rent + renters_insurance_yr/12):,.2f}
-    - **Ending balance: ${(down_payment_amt + (home_price * closing_costs_buy)) * (1 + invest_return / 12) + (mortgage_payment + month1_tax + month1_ins + hoa_monthly + month1_maint + month1_pmi + utilities_premium) - (monthly_rent + renters_insurance_yr/12):,.2f}**
+    ### 📊 Net Worth Comparison After Month 1:
+    - **Buyer Net Worth**: ${month1_buyer_networth:,.2f}
+    - **Renter Net Worth**: ${month1_renter_networth:,.2f}
+    - **Difference**: ${month1_buyer_networth - month1_renter_networth:,.2f} ({("Buyer ahead" if month1_buyer_networth > month1_renter_networth else "Renter ahead")})
+
+    💡 **Note**: This is just Month 1. The gap changes over time due to:
+    - Home appreciation vs investment returns
+    - Increasing principal payments (amortization)
+    - Rising rent vs fixed mortgage P&I
+    - Tax benefits accumulating over the year
     """)
