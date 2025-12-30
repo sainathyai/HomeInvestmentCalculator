@@ -274,58 +274,57 @@ with col4:
     else:
         st.metric("Advantage", "Renting", f"${abs(difference):,.0f}", delta_color="inverse")
 
-# Net Worth Calculation Explanation
-st.subheader("💡 Understanding Net Worth Calculations")
+# Net Worth Calculation Explanation (Collapsible)
+with st.expander("💡 Understanding Net Worth Calculations", expanded=False):
+    col_explain1, col_explain2 = st.columns(2)
 
-col_explain1, col_explain2 = st.columns(2)
+    with col_explain1:
+        st.markdown("""
+        **🏠 Buyer's Net Worth Components:**
 
-with col_explain1:
-    st.markdown("""
-    **🏠 Buyer's Net Worth Components:**
+        **Assets:**
+        - Current home value (with appreciation)
 
-    **Assets:**
-    - Current home value (with appreciation)
+        **Liabilities:**
+        - Remaining mortgage balance
+        - Selling costs ({:.1f}% of home value)
 
-    **Liabilities:**
-    - Remaining mortgage balance
-    - Selling costs ({:.1f}% of home value)
+        **Formula:**
+        ```
+        Net Worth = Home Value
+                    - Remaining Loan Balance
+                    - Selling Costs
+        ```
 
-    **Formula:**
-    ```
-    Net Worth = Home Value
-                - Remaining Loan Balance
-                - Selling Costs
-    ```
+        **What's Included:**
+        - ✅ Home equity buildup (principal payments)
+        - ✅ Property appreciation over time
+        - ✅ Tax benefits (reduce monthly costs)
+        - ❌ Not included: Down payment & closing costs (already spent)
+        """.format(selling_costs * 100))
 
-    **What's Included:**
-    - ✅ Home equity buildup (principal payments)
-    - ✅ Property appreciation over time
-    - ✅ Tax benefits (reduce monthly costs)
-    - ❌ Not included: Down payment & closing costs (already spent)
-    """.format(selling_costs * 100))
+    with col_explain2:
+        st.markdown("""
+        **💼 Renter's Net Worth Components:**
 
-with col_explain2:
-    st.markdown("""
-    **💼 Renter's Net Worth Components:**
+        **Investment Portfolio:**
+        - Down payment saved (${:,.0f})
+        - Closing costs saved (${:,.0f})
+        - Monthly cost differences invested
+        - Compound growth at {:.1f}% annually
 
-    **Investment Portfolio:**
-    - Down payment saved (${:,.0f})
-    - Closing costs saved (${:,.0f})
-    - Monthly cost differences invested
-    - Compound growth at {:.1f}% annually
+        **Formula:**
+        ```
+        Net Worth = Investment Portfolio Balance
+        ```
 
-    **Formula:**
-    ```
-    Net Worth = Investment Portfolio Balance
-    ```
-
-    **How It Grows:**
-    1. Starts with down payment + closing costs
-    2. Each month: Portfolio grows at investment rate
-    3. Monthly difference added/subtracted:
-       - If renting is cheaper → money invested
-       - If renting is more expensive → money withdrawn
-    """.format(down_payment_amt, home_price * closing_costs_buy, invest_return * 100))
+        **How It Grows:**
+        1. Starts with down payment + closing costs
+        2. Each month: Portfolio grows at investment rate
+        3. Monthly difference added/subtracted:
+           - If renting is cheaper → money invested
+           - If renting is more expensive → money withdrawn
+        """.format(down_payment_amt, home_price * closing_costs_buy, invest_return * 100))
 
 st.markdown("---")
 
@@ -382,6 +381,33 @@ with col_nw1:
     ax1.tick_params(labelsize=8)
     plt.tight_layout()
     st.pyplot(fig1)
+
+    # Add net worth difference chart below
+    st.markdown("##### 📊 Net Worth Difference Over Time")
+    fig1b, ax1b = plt.subplots(figsize=(5, 3))
+    net_worth_diff = np.array(net_worth_buy) - np.array(net_worth_rent)
+
+    # Color the area based on who's ahead
+    colors = ['#2E86AB' if diff > 0 else '#06A77D' for diff in net_worth_diff]
+    ax1b.fill_between(months, net_worth_diff, 0, alpha=0.3,
+                       color='#2E86AB', where=(net_worth_diff > 0), label='Buyer Ahead')
+    ax1b.fill_between(months, net_worth_diff, 0, alpha=0.3,
+                       color='#06A77D', where=(net_worth_diff <= 0), label='Renter Ahead')
+    ax1b.plot(months, net_worth_diff, color='#262730', linewidth=2)
+    ax1b.axhline(y=0, color='black', linestyle='-', linewidth=0.8)
+
+    if len(crossover_idx) > 0:
+        ax1b.axvline(x=breakeven_year, color='#D62828', linestyle=':', linewidth=2)
+
+    ax1b.set_xlabel('Years', fontsize=9)
+    ax1b.set_ylabel('Difference ($)', fontsize=9)
+    ax1b.set_title('Buy - Rent Net Worth Difference', fontsize=10, fontweight='bold')
+    ax1b.grid(True, alpha=0.3)
+    ax1b.legend(fontsize=8, loc='best')
+    ax1b.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, p: f'${x/1000:.0f}K'))
+    ax1b.tick_params(labelsize=8)
+    plt.tight_layout()
+    st.pyplot(fig1b)
 
 with col_nw2:
     # Tax benefit analysis
