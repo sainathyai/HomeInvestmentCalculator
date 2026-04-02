@@ -35,122 +35,134 @@
     <aside class="inputs-panel">
       <form id="calcForm" novalidate>
 
-        <section class="input-section">
-          <h3>🏡 Home & Loan</h3>
-          <div class="field">
-            <label>Home Price</label>
-            <div class="input-prefix"><span>$</span><input type="number" name="home_price" value="350000" min="50000" max="5000000" step="5000" /></div>
-          </div>
-          <div class="field">
-            <label>Down Payment <span class="val-label" id="lbl_down">20%</span></label>
-            <input type="range" name="down_payment_pct" min="0" max="50" value="20" step="1" />
-          </div>
-          <div class="field">
-            <label>Mortgage Rate <span class="val-label" id="lbl_rate">6.4%</span></label>
-            <input type="range" name="mortgage_rate" min="2" max="12" value="6.4" step="0.1" />
-          </div>
-          <div class="field">
-            <label>Loan Term</label>
-            <select name="loan_years">
-              <option value="15">15 years</option>
-              <option value="20">20 years</option>
-              <option value="30" selected>30 years</option>
-            </select>
-          </div>
-          <div class="field" id="pmiField">
-            <label>PMI Rate <span class="val-label" id="lbl_pmi">0.5%</span></label>
-            <input type="range" name="pmi_rate" min="0" max="2" value="0.5" step="0.1" />
-            <p class="field-hint">Applies until 20% equity is reached</p>
-          </div>
-        </section>
-
-        <section class="input-section">
-          <h3>💰 Ownership Costs</h3>
-          <div class="field">
-            <label>Property Tax Rate <span class="val-label" id="lbl_ptax">3.0%</span></label>
-            <input type="range" name="property_tax_rate" min="0" max="5" value="3.0" step="0.1" />
-          </div>
-          <div class="field">
-            <label>Property Tax Growth <span class="val-label" id="lbl_ptaxg">0.0%</span></label>
-            <input type="range" name="property_tax_growth" min="0" max="5" value="0" step="0.1" />
-          </div>
-          <div class="field">
-            <label>Home Insurance ($/yr)</label>
-            <div class="input-prefix"><span>$</span><input type="number" name="home_insurance_yr" value="3000" min="0" max="20000" step="100" /></div>
-          </div>
-          <div class="field">
-            <label>HOA Fee ($/mo)</label>
-            <div class="input-prefix"><span>$</span><input type="number" name="hoa_monthly" value="100" min="0" max="2000" step="10" /></div>
-          </div>
-          <div class="field">
-            <label>Maintenance <span class="val-label" id="lbl_maint">1.0%</span></label>
-            <input type="range" name="maintenance_pct" min="0" max="3" value="1.0" step="0.1" />
-            <p class="field-hint">% of home value per year</p>
-          </div>
-          <div class="field">
-            <label>Extra Utilities vs Renting ($/mo)</label>
-            <div class="input-prefix"><span>$</span><input type="number" name="utilities_premium" value="0" min="0" max="1000" step="10" /></div>
+        <section class="input-section open">
+          <h3 class="section-toggle">🏡 Home & Loan <span class="chevron">▾</span></h3>
+          <div class="section-body">
+            <div class="field">
+              <label>Home Price</label>
+              <div class="input-prefix"><span>$</span><input type="number" name="home_price" value="350000" min="50000" max="5000000" step="5000" /></div>
+            </div>
+            <div class="field">
+              <label>Down Payment <span class="val-label" id="lbl_down">20%</span></label>
+              <input type="range" name="down_payment_pct" min="0" max="50" value="20" step="1" />
+            </div>
+            <div class="field">
+              <label>Mortgage Rate <span class="val-label" id="lbl_rate">6.4%</span></label>
+              <input type="range" name="mortgage_rate" min="2" max="12" value="6.4" step="0.1" />
+            </div>
+            <div class="field">
+              <label>Loan Term</label>
+              <select name="loan_years">
+                <option value="15">15 years</option>
+                <option value="20">20 years</option>
+                <option value="30" selected>30 years</option>
+              </select>
+            </div>
+            <div class="field" id="pmiField">
+              <label>PMI Rate <span class="val-label" id="lbl_pmi">0.5%</span></label>
+              <input type="range" name="pmi_rate" min="0" max="2" value="0.5" step="0.1" />
+              <p class="field-hint">Applies until 20% equity is reached</p>
+            </div>
           </div>
         </section>
 
         <section class="input-section">
-          <h3>🏢 Rental Costs</h3>
-          <div class="field">
-            <label>Monthly Rent</label>
-            <div class="input-prefix"><span>$</span><input type="number" name="monthly_rent" value="2200" min="500" max="20000" step="50" /></div>
-          </div>
-          <div class="field">
-            <label>Rent Inflation <span class="val-label" id="lbl_rinf">3.0%</span></label>
-            <input type="range" name="rent_inflation" min="0" max="10" value="3.0" step="0.1" />
-          </div>
-          <div class="field">
-            <label>Renters Insurance ($/yr)</label>
-            <div class="input-prefix"><span>$</span><input type="number" name="renters_insurance_yr" value="250" min="0" max="2000" step="50" /></div>
-          </div>
-        </section>
-
-        <section class="input-section">
-          <h3>📈 Market Assumptions</h3>
-          <div class="field">
-            <label>Home Appreciation <span class="val-label" id="lbl_appr">3.5%</span></label>
-            <input type="range" name="home_appreciation" min="0" max="10" value="3.5" step="0.1" />
-          </div>
-          <div class="field">
-            <label>Investment Return <span class="val-label" id="lbl_inv">7.0%</span></label>
-            <input type="range" name="invest_return" min="0" max="15" value="7.0" step="0.1" />
-          </div>
-          <div class="field">
-            <label>Closing Costs (Buy) <span class="val-label" id="lbl_close">3.0%</span></label>
-            <input type="range" name="closing_costs_pct" min="0" max="5" value="3.0" step="0.1" />
-          </div>
-          <div class="field">
-            <label>Selling Costs <span class="val-label" id="lbl_sell">7.0%</span></label>
-            <input type="range" name="selling_costs_pct" min="0" max="10" value="7.0" step="0.1" />
+          <h3 class="section-toggle">💰 Ownership Costs <span class="chevron">▾</span></h3>
+          <div class="section-body">
+            <div class="field">
+              <label>Property Tax Rate <span class="val-label" id="lbl_ptax">3.0%</span></label>
+              <input type="range" name="property_tax_rate" min="0" max="5" value="3.0" step="0.1" />
+            </div>
+            <div class="field">
+              <label>Property Tax Growth <span class="val-label" id="lbl_ptaxg">0.0%</span></label>
+              <input type="range" name="property_tax_growth" min="0" max="5" value="0" step="0.1" />
+            </div>
+            <div class="field">
+              <label>Home Insurance ($/yr)</label>
+              <div class="input-prefix"><span>$</span><input type="number" name="home_insurance_yr" value="3000" min="0" max="20000" step="100" /></div>
+            </div>
+            <div class="field">
+              <label>HOA Fee ($/mo)</label>
+              <div class="input-prefix"><span>$</span><input type="number" name="hoa_monthly" value="100" min="0" max="2000" step="10" /></div>
+            </div>
+            <div class="field">
+              <label>Maintenance <span class="val-label" id="lbl_maint">1.0%</span></label>
+              <input type="range" name="maintenance_pct" min="0" max="3" value="1.0" step="0.1" />
+              <p class="field-hint">% of home value per year</p>
+            </div>
+            <div class="field">
+              <label>Extra Utilities vs Renting ($/mo)</label>
+              <div class="input-prefix"><span>$</span><input type="number" name="utilities_premium" value="0" min="0" max="1000" step="10" /></div>
+            </div>
           </div>
         </section>
 
         <section class="input-section">
-          <h3>🧾 Tax Information</h3>
-          <div class="field">
-            <label>Filing Status</label>
-            <select name="filing_status">
-              <option value="single" selected>Single</option>
-              <option value="married_jointly">Married Filing Jointly</option>
-              <option value="married_separately">Married Filing Separately</option>
-              <option value="head_of_household">Head of Household</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>Annual Gross Income</label>
-            <div class="input-prefix"><span>$</span><input type="number" name="income" value="100000" min="0" max="2000000" step="5000" /></div>
+          <h3 class="section-toggle">🏢 Rental Costs <span class="chevron">▾</span></h3>
+          <div class="section-body">
+            <div class="field">
+              <label>Monthly Rent</label>
+              <div class="input-prefix"><span>$</span><input type="number" name="monthly_rent" value="2200" min="500" max="20000" step="50" /></div>
+            </div>
+            <div class="field">
+              <label>Rent Inflation <span class="val-label" id="lbl_rinf">3.0%</span></label>
+              <input type="range" name="rent_inflation" min="0" max="10" value="3.0" step="0.1" />
+            </div>
+            <div class="field">
+              <label>Renters Insurance ($/yr)</label>
+              <div class="input-prefix"><span>$</span><input type="number" name="renters_insurance_yr" value="250" min="0" max="2000" step="50" /></div>
+            </div>
           </div>
         </section>
 
         <section class="input-section">
-          <h3>⏱ Time Horizon</h3>
-          <div class="field">
-            <label>Years to Simulate <span class="val-label" id="lbl_years">30 yrs</span></label>
-            <input type="range" name="years" min="5" max="40" value="30" step="1" />
+          <h3 class="section-toggle">📈 Market Assumptions <span class="chevron">▾</span></h3>
+          <div class="section-body">
+            <div class="field">
+              <label>Home Appreciation <span class="val-label" id="lbl_appr">3.5%</span></label>
+              <input type="range" name="home_appreciation" min="0" max="10" value="3.5" step="0.1" />
+            </div>
+            <div class="field">
+              <label>Investment Return <span class="val-label" id="lbl_inv">7.0%</span></label>
+              <input type="range" name="invest_return" min="0" max="15" value="7.0" step="0.1" />
+            </div>
+            <div class="field">
+              <label>Closing Costs (Buy) <span class="val-label" id="lbl_close">3.0%</span></label>
+              <input type="range" name="closing_costs_pct" min="0" max="5" value="3.0" step="0.1" />
+            </div>
+            <div class="field">
+              <label>Selling Costs <span class="val-label" id="lbl_sell">7.0%</span></label>
+              <input type="range" name="selling_costs_pct" min="0" max="10" value="7.0" step="0.1" />
+            </div>
+          </div>
+        </section>
+
+        <section class="input-section">
+          <h3 class="section-toggle">🧾 Tax Information <span class="chevron">▾</span></h3>
+          <div class="section-body">
+            <div class="field">
+              <label>Filing Status</label>
+              <select name="filing_status">
+                <option value="single" selected>Single</option>
+                <option value="married_jointly">Married Filing Jointly</option>
+                <option value="married_separately">Married Filing Separately</option>
+                <option value="head_of_household">Head of Household</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Annual Gross Income</label>
+              <div class="input-prefix"><span>$</span><input type="number" name="income" value="100000" min="0" max="2000000" step="5000" /></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="input-section">
+          <h3 class="section-toggle">⏱ Time Horizon <span class="chevron">▾</span></h3>
+          <div class="section-body">
+            <div class="field">
+              <label>Years to Simulate <span class="val-label" id="lbl_years">30 yrs</span></label>
+              <input type="range" name="years" min="5" max="40" value="30" step="1" />
+            </div>
           </div>
         </section>
 

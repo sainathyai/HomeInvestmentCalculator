@@ -333,3 +333,10 @@ document.getElementById('btnExportTXT').addEventListener('click', () => {
   const a    = Object.assign(document.createElement('a'), { href: url, download: 'homedecide-report.txt' });
   a.click(); URL.revokeObjectURL(url);
 });
+
+// ── Collapsible sections ──────────────────────────────────────────
+document.querySelectorAll('.section-toggle').forEach(toggle => {
+  toggle.addEventListener('click', () => {
+    toggle.closest('.input-section').classList.toggle('open');
+  });
+});
