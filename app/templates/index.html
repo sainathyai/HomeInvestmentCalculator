@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HomeDecide — Buy vs Rent Calculator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+  <!-- NAV -->
+  <nav class="navbar">
+    <div class="nav-brand">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M14 3L3 12h3v11h6v-7h4v7h6V12h3L14 3z" fill="currentColor"/></svg>
+      <span>HomeDecide</span>
+    </div>
+    <div class="nav-actions">
+      <button class="btn-icon" id="themeToggle" title="Toggle theme">
+        <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <h1>Buy vs Rent Calculator</h1>
+    <p>Model every financial factor and find out which option truly builds more wealth over time.</p>
+  </header>
+
+  <!-- MAIN LAYOUT -->
+  <main class="layout">
+    <!-- ── INPUTS PANEL ── -->
+    <aside class="inputs-panel">
+      <form id="calcForm" novalidate>
+
+        <section class="input-section">
+          <h3>🏡 Home & Loan</h3>
+          <div class="field">
+            <label>Home Price</label>
+            <div class="input-prefix"><span>$</span><input type="number" name="home_price" value="350000" min="50000" max="5000000" step="5000" /></div>
+          </div>
+          <div class="field">
+            <label>Down Payment <span class="val-label" id="lbl_down">20%</span></label>
+            <input type="range" name="down_payment_pct" min="0" max="50" value="20" step="1" />
+          </div>
+          <div class="field">
+            <label>Mortgage Rate <span class="val-label" id="lbl_rate">6.4%</span></label>
+            <input type="range" name="mortgage_rate" min="2" max="12" value="6.4" step="0.1" />
+          </div>
+          <div class="field">
+            <label>Loan Term</label>
+            <select name="loan_years">
+              <option value="15">15 years</option>
+              <option value="20">20 years</option>
+              <option value="30" selected>30 years</option>
+            </select>
+          </div>
+          <div class="field" id="pmiField">
+            <label>PMI Rate <span class="val-label" id="lbl_pmi">0.5%</span></label>
+            <input type="range" name="pmi_rate" min="0" max="2" value="0.5" step="0.1" />
+            <p class="field-hint">Applies until 20% equity is reached</p>
+          </div>
+        </section>
+
+        <section class="input-section">
+          <h3>💰 Ownership Costs</h3>
+          <div class="field">
+            <label>Property Tax Rate <span class="val-label" id="lbl_ptax">3.0%</span></label>
+            <input type="range" name="property_tax_rate" min="0" max="5" value="3.0" step="0.1" />
+          </div>
+          <div class="field">
+            <label>Property Tax Growth <span class="val-label" id="lbl_ptaxg">0.0%</span></label>
+            <input type="range" name="property_tax_growth" min="0" max="5" value="0" step="0.1" />
+          </div>
+          <div class="field">
+            <label>Home Insurance ($/yr)</label>
+            <div class="input-prefix"><span>$</span><input type="number" name="home_insurance_yr" value="3000" min="0" max="20000" step="100" /></div>
+          </div>
+          <div class="field">
+            <label>HOA Fee ($/mo)</label>
+            <div class="input-prefix"><span>$</span><input type="number" name="hoa_monthly" value="100" min="0" max="2000" step="10" /></div>
+          </div>
+          <div class="field">
+            <label>Maintenance <span class="val-label" id="lbl_maint">1.0%</span></label>
+            <input type="range" name="maintenance_pct" min="0" max="3" value="1.0" step="0.1" />
+            <p class="field-hint">% of home value per year</p>
+          </div>
+          <div class="field">
+            <label>Extra Utilities vs Renting ($/mo)</label>
+            <div class="input-prefix"><span>$</span><input type="number" name="utilities_premium" value="0" min="0" max="1000" step="10" /></div>
+          </div>
+        </section>
+
+        <section class="input-section">
+          <h3>🏢 Rental Costs</h3>
+          <div class="field">
+            <label>Monthly Rent</label>
+            <div class="input-prefix"><span>$</span><input type="number" name="monthly_rent" value="2200" min="500" max="20000" step="50" /></div>
+          </div>
+          <div class="field">
+            <label>Rent Inflation <span class="val-label" id="lbl_rinf">3.0%</span></label>
+            <input type="range" name="rent_inflation" min="0" max="10" value="3.0" step="0.1" />
+          </div>
+          <div class="field">
+            <label>Renters Insurance ($/yr)</label>
+            <div class="input-prefix"><span>$</span><input type="number" name="renters_insurance_yr" value="250" min="0" max="2000" step="50" /></div>
+          </div>
+        </section>
+
+        <section class="input-section">
+          <h3>📈 Market Assumptions</h3>
+          <div class="field">
+            <label>Home Appreciation <span class="val-label" id="lbl_appr">3.5%</span></label>
+            <input type="range" name="home_appreciation" min="0" max="10" value="3.5" step="0.1" />
+          </div>
+          <div class="field">
+            <label>Investment Return <span class="val-label" id="lbl_inv">7.0%</span></label>
+            <input type="range" name="invest_return" min="0" max="15" value="7.0" step="0.1" />
+          </div>
+          <div class="field">
+            <label>Closing Costs (Buy) <span class="val-label" id="lbl_close">3.0%</span></label>
+            <input type="range" name="closing_costs_pct" min="0" max="5" value="3.0" step="0.1" />
+          </div>
+          <div class="field">
+            <label>Selling Costs <span class="val-label" id="lbl_sell">7.0%</span></label>
+            <input type="range" name="selling_costs_pct" min="0" max="10" value="7.0" step="0.1" />
+          </div>
+        </section>
+
+        <section class="input-section">
+          <h3>🧾 Tax Information</h3>
+          <div class="field">
+            <label>Filing Status</label>
+            <select name="filing_status">
+              <option value="single" selected>Single</option>
+              <option value="married_jointly">Married Filing Jointly</option>
+              <option value="married_separately">Married Filing Separately</option>
+              <option value="head_of_household">Head of Household</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Annual Gross Income</label>
+            <div class="input-prefix"><span>$</span><input type="number" name="income" value="100000" min="0" max="2000000" step="5000" /></div>
+          </div>
+        </section>
+
+        <section class="input-section">
+          <h3>⏱ Time Horizon</h3>
+          <div class="field">
+            <label>Years to Simulate <span class="val-label" id="lbl_years">30 yrs</span></label>
+            <input type="range" name="years" min="5" max="40" value="30" step="1" />
+          </div>
+        </section>
+
+        <button type="submit" class="btn-calculate">Calculate</button>
+      </form>
+    </aside>
+
+    <!-- ── RESULTS PANEL ── -->
+    <section class="results-panel" id="resultsPanel">
+      <!-- Empty state -->
+      <div class="empty-state" id="emptyState">
+        <svg width="64" height="64" viewBox="0 0 64 64" fill="none"><path d="M32 8L8 26h6v24h12v-14h8v14h12V26h6L32 8z" fill="var(--accent)" opacity=".15"/><path d="M32 8L8 26h6v24h12v-14h8v14h12V26h6L32 8z" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round"/></svg>
+        <h3>Configure your scenario</h3>
+        <p>Adjust the parameters on the left and click <strong>Calculate</strong> to see the full financial analysis.</p>
+      </div>
+
+      <!-- Results (hidden until calculated) -->
+      <div class="results-content hidden" id="resultsContent">
+
+        <!-- Summary Cards -->
+        <div class="summary-banner" id="advantageBanner"></div>
+
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-label">Monthly P&I</div>
+            <div class="metric-value" id="mMonthlyPI">—</div>
+          </div>
+          <div class="metric-card highlight-buy">
+            <div class="metric-label" id="lblBuyNW">Buy Net Worth</div>
+            <div class="metric-value" id="mBuyNW">—</div>
+          </div>
+          <div class="metric-card highlight-rent">
+            <div class="metric-label" id="lblRentNW">Rent Net Worth</div>
+            <div class="metric-value" id="mRentNW">—</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Advantage</div>
+            <div class="metric-value" id="mAdvantage">—</div>
+          </div>
+        </div>
+
+        <div class="metrics-grid metrics-grid-4">
+          <div class="metric-card">
+            <div class="metric-label">Total Interest</div>
+            <div class="metric-value small" id="mTotalInterest">—</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Final Home Value</div>
+            <div class="metric-value small" id="mFinalHome">—</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Total Tax Savings</div>
+            <div class="metric-value small" id="mTaxSavings">—</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Total PMI Paid</div>
+            <div class="metric-value small" id="mPMI">—</div>
+          </div>
+        </div>
+
+        <!-- Charts -->
+        <h2 class="section-title">Net Worth Comparison</h2>
+        <div class="chart-full"><canvas id="chartNetWorth"></canvas></div>
+
+        <h2 class="section-title">Detailed Analysis</h2>
+        <div class="chart-grid">
+          <div class="chart-card"><canvas id="chartHomeVsMortgage"></canvas></div>
+          <div class="chart-card"><canvas id="chartMonthlyCosts"></canvas></div>
+          <div class="chart-card"><canvas id="chartCumulative"></canvas></div>
+          <div class="chart-card"><canvas id="chartTaxPMI"></canvas></div>
+        </div>
+
+        <!-- Annual Tables -->
+        <h2 class="section-title">Annual Breakdown</h2>
+        <div class="tables-grid">
+          <div class="table-wrapper">
+            <h4>Buyer Annual Costs</h4>
+            <div class="table-scroll"><table id="buyerTable"></table></div>
+          </div>
+          <div class="table-wrapper">
+            <h4>Renter Annual Costs</h4>
+            <div class="table-scroll"><table id="renterTable"></table></div>
+          </div>
+        </div>
+
+        <!-- Export -->
+        <div class="export-bar">
+          <button class="btn-export" id="btnExportCSV">⬇ Download CSV</button>
+          <button class="btn-export" id="btnExportTXT">⬇ Download Report</button>
+        </div>
+
+      </div>
+
+      <!-- Loading -->
+      <div class="loading hidden" id="loadingState">
+        <div class="spinner"></div>
+        <p>Calculating…</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
