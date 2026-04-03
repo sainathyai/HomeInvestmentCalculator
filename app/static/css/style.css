@@ -1,7 +1,7 @@
 /* ── Design tokens ─────────────────────────────────── */
 :root {
-  --accent:       #4F46E5;
-  --accent-light: #EEF2FF;
+  --accent:       #007a6a;
+  --accent-light: #E6FBF8;
   --buy-color:    #2E86AB;
   --rent-color:   #06A77D;
   --danger:       #D62828;
@@ -21,13 +21,14 @@
 }
 
 [data-theme="dark"] {
-  --bg:         #0F1117;
-  --surface:    #1A1D27;
-  --surface2:   #22263A;
-  --border:     #2D3148;
-  --text:       #F3F4F6;
-  --text-muted: #9CA3AF;
-  --accent-light:#1E1B4B;
+  --bg:         #07090f;
+  --surface:    #0d1120;
+  --surface2:   #141929;
+  --border:     #1c2438;
+  --text:       #eef2f9;
+  --text-muted: #9aadc8;
+  --accent:     #00e5c3;
+  --accent-light:#003d33;
   --shadow:     0 1px 4px rgba(0,0,0,.4);
   --shadow-md:  0 4px 16px rgba(0,0,0,.5);
 }
@@ -140,7 +141,7 @@ select { cursor: pointer; }
   cursor: pointer; transition: background .15s, transform .1s;
   margin-top: .25rem;
 }
-.btn-calculate:hover  { background: #4338CA; }
+.btn-calculate:hover  { background: #006558; }
 .btn-calculate:active { transform: scale(.98); }
 
 /* ── Results Panel ──────────────────────────────────── */
@@ -163,8 +164,8 @@ select { cursor: pointer; }
 }
 .summary-banner.buy  { background: #DBEAFE; color: #1D4ED8; }
 .summary-banner.rent { background: #D1FAE5; color: #065F46; }
-[data-theme="dark"] .summary-banner.buy  { background: #1E3A5F; color: #93C5FD; }
-[data-theme="dark"] .summary-banner.rent { background: #064E3B; color: #6EE7B7; }
+[data-theme="dark"] .summary-banner.buy  { background: #0d2229; color: #00e5c3; }
+[data-theme="dark"] .summary-banner.rent { background: #003d33; color: #00e5c3; }
 
 /* Metrics */
 .metrics-grid {
